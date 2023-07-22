@@ -9,8 +9,11 @@
         public string Address { get; set; }
         public string Suburb { get; set; }
         public string City { get; set; }
-        public string Zip { get; set; }
+        public int Zip { get; set; }
         public ICollection<Staff> Staff { get; set; }
 
     }
 }
+
+
+
