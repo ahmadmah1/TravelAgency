@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TravelAgency.Areas.Identity.Data;
 using TravelAgency.Models;
 
 namespace TravelAgency.Controllers
 {
     public class StoresController : Controller
     {
-        private readonly StoreDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public StoresController(StoreDbContext context)
+        public StoresController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -23,7 +25,7 @@ namespace TravelAgency.Controllers
         {
               return _context.Store != null ? 
                           View(await _context.Store.ToListAsync()) :
-                          Problem("Entity set 'StoreDbContext.Store'  is null.");
+                          Problem("Entity set 'ApplicationDbContext.Store'  is null.");
         }
 
         // GET: Stores/Details/5
@@ -45,6 +47,9 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Stores/Create
+
+        [Authorize]
+
         public IActionResult Create()
         {
             return View();
@@ -53,6 +58,7 @@ namespace TravelAgency.Controllers
         // POST: Stores/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StoreID,StoreName,Phone,Email,Address,Suburb,City,Zip")] Store store)
@@ -67,6 +73,7 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Stores/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Store == null)
@@ -85,6 +92,7 @@ namespace TravelAgency.Controllers
         // POST: Stores/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("StoreID,StoreName,Phone,Email,Address,Suburb,City,Zip")] Store store)
@@ -118,6 +126,7 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Stores/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Store == null)
@@ -136,13 +145,14 @@ namespace TravelAgency.Controllers
         }
 
         // POST: Stores/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Store == null)
             {
-                return Problem("Entity set 'StoreDbContext.Store'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Store'  is null.");
             }
             var store = await _context.Store.FindAsync(id);
             if (store != null)

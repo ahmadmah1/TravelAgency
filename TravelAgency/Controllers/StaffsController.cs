@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TravelAgency.Areas.Identity.Data;
 using TravelAgency.Models;
 
 namespace TravelAgency.Controllers
 {
     public class StaffsController : Controller
     {
-        private readonly StaffDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public StaffsController(StaffDbContext context)
+        public StaffsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -21,8 +23,8 @@ namespace TravelAgency.Controllers
         // GET: Staffs
         public async Task<IActionResult> Index()
         {
-            var staffDbContext = _context.Staff.Include(s => s.Store);
-            return View(await staffDbContext.ToListAsync());
+            var applicationDbContext = _context.Staff.Include(s => s.Store);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Staffs/Details/5
@@ -45,15 +47,18 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Staffs/Create
+
+        [Authorize]
         public IActionResult Create()
         {
-            ViewData["StoreID"] = new SelectList(_context.Set<Store>(), "StoreID", "StoreID");
+            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID");
             return View();
         }
 
         // POST: Staffs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StaffId,StoreID,FirstName,LastName,Email,Phone,Address")] Staff staff)
@@ -64,11 +69,12 @@ namespace TravelAgency.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StoreID"] = new SelectList(_context.Set<Store>(), "StoreID", "StoreID", staff.StoreID);
+            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", staff.StoreID);
             return View(staff);
         }
 
         // GET: Staffs/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Staff == null)
@@ -81,13 +87,14 @@ namespace TravelAgency.Controllers
             {
                 return NotFound();
             }
-            ViewData["StoreID"] = new SelectList(_context.Set<Store>(), "StoreID", "StoreID", staff.StoreID);
+            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", staff.StoreID);
             return View(staff);
         }
 
         // POST: Staffs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("StaffId,StoreID,FirstName,LastName,Email,Phone,Address")] Staff staff)
@@ -117,11 +124,12 @@ namespace TravelAgency.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StoreID"] = new SelectList(_context.Set<Store>(), "StoreID", "StoreID", staff.StoreID);
+            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", staff.StoreID);
             return View(staff);
         }
 
         // GET: Staffs/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Staff == null)
@@ -141,13 +149,14 @@ namespace TravelAgency.Controllers
         }
 
         // POST: Staffs/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Staff == null)
             {
-                return Problem("Entity set 'StaffDbContext.Staff'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Staff'  is null.");
             }
             var staff = await _context.Staff.FindAsync(id);
             if (staff != null)

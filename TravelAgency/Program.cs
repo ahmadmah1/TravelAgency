@@ -3,16 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using TravelAgency.Areas.Identity.Data;
 using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<TicketInfoDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TicketInfoDbContext") ?? throw new InvalidOperationException("Connection string 'TicketInfoDbContext' not found.")));
-builder.Services.AddDbContext<StoreDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("StoreDbContext") ?? throw new InvalidOperationException("Connection string 'StoreDbContext' not found.")));
-builder.Services.AddDbContext<StaffDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("StaffDbContext") ?? throw new InvalidOperationException("Connection string 'StaffDbContext' not found.")));
-builder.Services.AddDbContext<OrderDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("OrderDbContext") ?? throw new InvalidOperationException("Connection string 'OrderDbContext' not found.")));
-builder.Services.AddDbContext<CustomerDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CustomerDbContext") ?? throw new InvalidOperationException("Connection string 'CustomerDbContext' not found.")));
 
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 

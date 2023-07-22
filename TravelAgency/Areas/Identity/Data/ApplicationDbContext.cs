@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TravelAgency.Areas.Identity.Data;
+using TravelAgency.Models;
 
 namespace TravelAgency.Areas.Identity.Data;
 
@@ -22,6 +23,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }
+
+    public DbSet<TravelAgency.Models.Customer> Customer { get; set; } = default!;
+
+    public DbSet<TravelAgency.Models.Order> Order { get; set; } = default!;
+
+    public DbSet<TravelAgency.Models.TicketInfo> TicketInfo { get; set; } = default!;
+
+    public DbSet<TravelAgency.Models.Staff> Staff { get; set; } = default!;
+
+    public DbSet<TravelAgency.Models.Store> Store { get; set; } = default!;
 }
 
 

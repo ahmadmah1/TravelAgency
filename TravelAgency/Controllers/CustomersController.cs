@@ -2,44 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TravelAgency.Areas.Identity.Data;
 using TravelAgency.Models;
 
 namespace TravelAgency.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly CustomerDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CustomersController(CustomerDbContext context)
+        public CustomersController(ApplicationDbContext context)
         {
             _context = context;
         }
+        
 
         // GET: Customers
         public async Task<IActionResult> Index()
         {
               return _context.Customer != null ? 
                           View(await _context.Customer.ToListAsync()) :
-                          Problem("Entity set 'CustomerDbContext.Customer'  is null.");
+                          Problem("Entity set 'ApplicationDbContext.Customer'  is null.");
         }
 
         // GET: Customers/ShowSearchForm
-        public async Task<IActionResult> ShowSearchView()
+        public async Task<IActionResult> ShowSearchForm()
         {
             return _context.Customer != null ?
                         View() :
-                        Problem("Entity set 'CustomerDbContext.Customer'  is null.");
+                        Problem("Entity set 'ApplicationDbContext.Customer'  is null.");
         }
 
-        // PoST : Customers/ShowSearchResults
-        public async Task<IActionResult> ShowSearchResults()
+        // PoST: Customers/ShowSearchResults
+        public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
         {
-            return _context.Customer != null ?
-                        View() :
-                        Problem("Entity set 'CustomerDbContext.Customer'  is null.");
+            return View("Index", await _context.Customer.Where(j => j.LastName.Contains (SearchPhrase)).ToListAsync());
         }
 
 
@@ -62,6 +63,8 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Customers/Create
+
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -70,6 +73,7 @@ namespace TravelAgency.Controllers
         // POST: Customers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerID,FirstName,LastName,DOB,Address,Suburb,City,Zip,Email,Phone")] Customer customer)
@@ -84,6 +88,7 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Customers/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Customer == null)
@@ -102,6 +107,7 @@ namespace TravelAgency.Controllers
         // POST: Customers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CustomerID,FirstName,LastName,DOB,Address,Suburb,City,Zip,Email,Phone")] Customer customer)
@@ -135,6 +141,7 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Customers/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Customer == null)
@@ -153,13 +160,14 @@ namespace TravelAgency.Controllers
         }
 
         // POST: Customers/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Customer == null)
             {
-                return Problem("Entity set 'CustomerDbContext.Customer'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Customer'  is null.");
             }
             var customer = await _context.Customer.FindAsync(id);
             if (customer != null)

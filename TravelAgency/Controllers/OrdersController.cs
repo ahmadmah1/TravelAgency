@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TravelAgency.Areas.Identity.Data;
 using TravelAgency.Models;
 
 namespace TravelAgency.Controllers
 {
     public class OrdersController : Controller
     {
-        private readonly OrderDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public OrdersController(OrderDbContext context)
+        public OrdersController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -21,8 +23,8 @@ namespace TravelAgency.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var orderDbContext = _context.Order.Include(o => o.Customer).Include(o => o.Staff);
-            return View(await orderDbContext.ToListAsync());
+            var applicationDbContext = _context.Order.Include(o => o.Customer).Include(o => o.Staff);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Orders/Details/5
@@ -46,16 +48,19 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Orders/Create
+
+        [Authorize]
         public IActionResult Create()
         {
-            ViewData["CustomerID"] = new SelectList(_context.Set<Customer>(), "CustomerID", "CustomerID");
-            ViewData["StaffID"] = new SelectList(_context.Set<Staff>(), "StaffId", "StaffId");
+            ViewData["CustomerID"] = new SelectList(_context.Customer, "CustomerID", "CustomerID");
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffId", "StaffId");
             return View();
         }
 
         // POST: Orders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderID,CustomerID,StaffID,DateOrdered,Price,Paid")] Order order)
@@ -66,12 +71,13 @@ namespace TravelAgency.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerID"] = new SelectList(_context.Set<Customer>(), "CustomerID", "CustomerID", order.CustomerID);
-            ViewData["StaffID"] = new SelectList(_context.Set<Staff>(), "StaffId", "StaffId", order.StaffID);
+            ViewData["CustomerID"] = new SelectList(_context.Customer, "CustomerID", "CustomerID", order.CustomerID);
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffId", "StaffId", order.StaffID);
             return View(order);
         }
 
         // GET: Orders/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Order == null)
@@ -84,14 +90,15 @@ namespace TravelAgency.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerID"] = new SelectList(_context.Set<Customer>(), "CustomerID", "CustomerID", order.CustomerID);
-            ViewData["StaffID"] = new SelectList(_context.Set<Staff>(), "StaffId", "StaffId", order.StaffID);
+            ViewData["CustomerID"] = new SelectList(_context.Customer, "CustomerID", "CustomerID", order.CustomerID);
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffId", "StaffId", order.StaffID);
             return View(order);
         }
 
         // POST: Orders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderID,CustomerID,StaffID,DateOrdered,Price,Paid")] Order order)
@@ -121,12 +128,13 @@ namespace TravelAgency.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerID"] = new SelectList(_context.Set<Customer>(), "CustomerID", "CustomerID", order.CustomerID);
-            ViewData["StaffID"] = new SelectList(_context.Set<Staff>(), "StaffId", "StaffId", order.StaffID);
+            ViewData["CustomerID"] = new SelectList(_context.Customer, "CustomerID", "CustomerID", order.CustomerID);
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffId", "StaffId", order.StaffID);
             return View(order);
         }
 
         // GET: Orders/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Order == null)
@@ -147,13 +155,14 @@ namespace TravelAgency.Controllers
         }
 
         // POST: Orders/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Order == null)
             {
-                return Problem("Entity set 'OrderDbContext.Order'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Order'  is null.");
             }
             var order = await _context.Order.FindAsync(id);
             if (order != null)

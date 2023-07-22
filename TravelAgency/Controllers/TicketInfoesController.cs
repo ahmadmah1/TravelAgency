@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TravelAgency.Areas.Identity.Data;
 using TravelAgency.Models;
 
 namespace TravelAgency.Controllers
 {
     public class TicketInfoesController : Controller
     {
-        private readonly TicketInfoDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public TicketInfoesController(TicketInfoDbContext context)
+        public TicketInfoesController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -23,7 +25,7 @@ namespace TravelAgency.Controllers
         {
               return _context.TicketInfo != null ? 
                           View(await _context.TicketInfo.ToListAsync()) :
-                          Problem("Entity set 'TicketInfoDbContext.TicketInfo'  is null.");
+                          Problem("Entity set 'ApplicationDbContext.TicketInfo'  is null.");
         }
 
         // GET: TicketInfoes/Details/5
@@ -45,6 +47,8 @@ namespace TravelAgency.Controllers
         }
 
         // GET: TicketInfoes/Create
+
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -53,6 +57,7 @@ namespace TravelAgency.Controllers
         // POST: TicketInfoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TicketID,CustomerID,OrderID,SeatNo,TravelDate,Airline,Country,City,Arrival,Departure")] TicketInfo ticketInfo)
@@ -67,6 +72,7 @@ namespace TravelAgency.Controllers
         }
 
         // GET: TicketInfoes/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.TicketInfo == null)
@@ -85,6 +91,7 @@ namespace TravelAgency.Controllers
         // POST: TicketInfoes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TicketID,CustomerID,OrderID,SeatNo,TravelDate,Airline,Country,City,Arrival,Departure")] TicketInfo ticketInfo)
@@ -118,6 +125,7 @@ namespace TravelAgency.Controllers
         }
 
         // GET: TicketInfoes/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.TicketInfo == null)
@@ -136,13 +144,14 @@ namespace TravelAgency.Controllers
         }
 
         // POST: TicketInfoes/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.TicketInfo == null)
             {
-                return Problem("Entity set 'TicketInfoDbContext.TicketInfo'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.TicketInfo'  is null.");
             }
             var ticketInfo = await _context.TicketInfo.FindAsync(id);
             if (ticketInfo != null)
