@@ -62,7 +62,7 @@ namespace TravelAgency.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TicketID,CustomerID,OrderID,SeatNo,TravelDate,Airline,Country,City,Arrival,Departure")] TicketInfo ticketInfo)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(ticketInfo);
                 await _context.SaveChangesAsync();
@@ -101,7 +101,7 @@ namespace TravelAgency.Controllers
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {

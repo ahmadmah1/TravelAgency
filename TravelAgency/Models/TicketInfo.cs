@@ -24,7 +24,7 @@ namespace TravelAgency.Models
         [DataType(DataType.Text)]
         // The 'DataType' annotation that specifies which type of data it is (e.g. Text)
 
-        [RegularExpression("\r\n^[a - zA - Z0 - 9_.-] *$", ErrorMessage = "Please enter the seat number")]
+        [RegularExpression("^[a-zA-Z0-9_.-]*$", ErrorMessage = "Please enter the seat number")]
         // Regular expressions specify what can and can't be put in a field. This one for example only allows number and letters to be inputted
         public string SeatNo { get; set; }
 

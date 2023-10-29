@@ -32,16 +32,18 @@ namespace TravelAgency.Controllers
         // GET: Customers/ShowSearchForm
         public async Task<IActionResult> ShowSearchForm()
         {
-            return _context.Customer != null ?
-                        View() :
-                        Problem("Entity set 'ApplicationDbContext.Customer'  is null.");
+            return View();
         }
 
         // PoST: Customers/ShowSearchResults
         public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
         {
-            return View("Index", await _context.Customer.Where(j => j.LastName.Contains (SearchPhrase)).ToListAsync());
+            return _context.Customer != null ?
+            View("Index", await _context.Customer.Where(j => j.LastName.Contains(SearchPhrase)).ToListAsync()) :
+            Problem("Entity set 'ApplicationDbContext.Customer'  is null.");
         }
+
+
 
 
         // GET: Customers/Details/5

@@ -36,13 +36,12 @@ namespace TravelAgency.Models
 
         [Required(ErrorMessage = "Please specify if paid")]
         [Display(Name = "Paid")]
-        [Range(1, 99999, ErrorMessage = "number is not valid")]
         [RegularExpression("^(?:Yes|No)$", ErrorMessage = "Yes/No")]
         public string Paid { get; set; }
 
         public Customer Customer { get; set; }
         public Staff Staff { get; set; }
-
+   
     }
 }
 
