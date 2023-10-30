@@ -17,7 +17,7 @@ namespace TravelAgency.Models
 
         [Required(ErrorMessage = "Please enter date")]
         // This function tell you that you must put a value in the field
-        [DisplayName("Date ordered")]
+        [DisplayName("Date ordered for")]
         // This function determines what the label for the field is
         [DataType(DataType.Date)]
         // The 'DataType' annotation that specifies which type of data it is (e.g. Text)
@@ -36,7 +36,7 @@ namespace TravelAgency.Models
 
         [Required(ErrorMessage = "Please specify if paid")]
         [Display(Name = "Paid")]
-        [RegularExpression("^(?:Yes|No)$", ErrorMessage = "Yes/No")]
+        [RegularExpression("^(?:Yes|No|y|n|Y|N|yes|no)$", ErrorMessage = "Yes/No")]
         public string Paid { get; set; }
 
         public Customer Customer { get; set; }

@@ -30,9 +30,10 @@ namespace TravelAgency.Models
         [RegularExpression("^[\\w'\\-,.][^0-9_!¡?÷?¿/\\\\+=@#$%ˆ&*(){}|~<>;:[\\]]{2,}$", ErrorMessage = "Please enter your last name")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Please enter your date of birth")]
-        [DisplayName("Date of Birth")]
-        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Please enter your year of birth")]
+        [DisplayName("Year of Birth")]
+        [RegularExpression("^(19\\d\\d|20[0-1]\\d|2022|2023)$", ErrorMessage = "Please input the year you were born")]
+        [DataType(DataType.Text)]
         public string DOB { get; set; }
 
         [Required(ErrorMessage = "Please enter your address")]
@@ -62,7 +63,7 @@ namespace TravelAgency.Models
         [Required(ErrorMessage = "Please enter your email address")]
         [DisplayName("Email Address")]
         [DataType(DataType.EmailAddress)]
-        [RegularExpression("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$", ErrorMessage = "Please enter a valid email address")]
+        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Please enter a valid email address")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Please enter your phone number")]

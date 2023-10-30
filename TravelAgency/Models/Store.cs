@@ -11,6 +11,8 @@ namespace TravelAgency.Models
 
         [Required]
         [DisplayName("Store name")]
+        [DataType(DataType.Text)]
+        [RegularExpression("^[\\w'\\-,.][^0-9_!¡?÷?¿/\\\\+=@#$%ˆ&*(){}|~<>;:[\\]]{2,}$", ErrorMessage = "Please enter the branch name")]
         public string StoreName { get; set; }
         
 
@@ -30,7 +32,7 @@ namespace TravelAgency.Models
         [Required(ErrorMessage = "Please enter your email address")]
         [DisplayName("Email Address")]
         [DataType(DataType.EmailAddress)]
-        [RegularExpression("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$", ErrorMessage = "Please enter a valid email address")]
+        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Please enter a valid email address")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Please enter your address")]
@@ -38,17 +40,17 @@ namespace TravelAgency.Models
         [DataType(DataType.Text)]
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "Please enter the suburb you live in")]
+        [Required(ErrorMessage = "Please enter the suburb the store is in")]
         [DisplayName("Suburb")]
         [DataType(DataType.Text)]
         public string Suburb { get; set; }
 
-        [Required(ErrorMessage = "Please enter the city you live in")]
+        [Required(ErrorMessage = "Please enter the city the store is in")]
         [DisplayName("City")]
         [DataType(DataType.Text)]
         public string City { get; set; }
 
-        [Required(ErrorMessage = "Please enter your ZIP code")]
+        [Required(ErrorMessage = "Please enter the ZIP code")]
         [DisplayName("Zip")]
         [Range(1, 99999, ErrorMessage = "number is not valid")]
         [DataType(DataType.PostalCode)]
