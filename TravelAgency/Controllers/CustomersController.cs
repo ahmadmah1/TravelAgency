@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContosoUniversity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,16 +20,33 @@ namespace TravelAgency.Controllers
         {
             _context = context;
         }
-        
+
 
         // GET: Customers
-        public async Task<IActionResult> Index()
-        {
-              return _context.Customer != null ? 
-                          View(await _context.Customer.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Customer'  is null.");
-        }
+        public async Task<IActionResult> Index(
+        string sortOrder,
+        string currentFilter,
+        string searchString,
+        int? pageNumber)
 
+        {
+            ViewData["CurrentFilter"] = searchString;
+
+            var customers = from mem in _context.Customer
+                          select mem;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                customers = customers.Where(m => m.LastName.Contains(searchString));
+                                       
+                return View(customers);
+            }
+
+            var memberList = _context.Customer.ToList();
+            return View(memberList);
+
+
+
+        }
         // GET: Customers/ShowSearchForm
         public async Task<IActionResult> ShowSearchForm()
         {

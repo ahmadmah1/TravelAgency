@@ -21,11 +21,22 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Stores
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchString)
         {
-              return _context.Store != null ? 
-                          View(await _context.Store.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Store'  is null.");
+            ViewData["CurrentFilter"] = searchString;
+
+            var stores = from mem in _context.Store
+                            select mem;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                stores = stores.Where(m => m.StoreName.Contains(searchString));
+
+                return View(stores);
+            }
+
+            var memberList = _context.Store.ToList();
+            return View(memberList);
+
         }
 
         // GET: Stores/Details/5

@@ -21,10 +21,22 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Staffs
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchString)
         {
-            var applicationDbContext = _context.Staff.Include(s => s.Store);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+            var staffs = from mem in _context.Staff
+                            select mem;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                staffs = staffs.Where(m => m.LastName.Contains(searchString));
+
+                return View(staffs);
+            }
+
+            var memberList = _context.Staff.ToList();
+            return View(memberList);
+
         }
 
         // GET: Staffs/Details/5

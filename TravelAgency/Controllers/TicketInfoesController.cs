@@ -21,11 +21,22 @@ namespace TravelAgency.Controllers
         }
 
         // GET: TicketInfoes
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchString)
         {
-              return _context.TicketInfo != null ? 
-                          View(await _context.TicketInfo.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.TicketInfo'  is null.");
+            ViewData["CurrentFilter"] = searchString;
+
+            var ticketInfos = from mem in _context.TicketInfo
+                            select mem;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ticketInfos = ticketInfos.Where(m => m.Airline.Contains(searchString));
+
+                return View(ticketInfos);
+            }
+
+            var memberList = _context.TicketInfo.ToList();
+            return View(memberList);
+
         }
 
         // GET: TicketInfoes/Details/5

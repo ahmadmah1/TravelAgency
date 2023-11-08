@@ -21,10 +21,22 @@ namespace TravelAgency.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchString)
         {
-            var applicationDbContext = _context.Order.Include(o => o.Customer).Include(o => o.Staff);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+            var orders = from mem in _context.Order
+                            select mem;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                orders = orders.Where(m => m.DateOrdered.Contains(searchString));
+
+                return View(orders);
+            }
+
+            var memberList = _context.Order.ToList();
+            return View(memberList);
+
         }
 
         // GET: Orders/Details/5
